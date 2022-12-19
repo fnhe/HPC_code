@@ -1,0 +1,2 @@
+OPTIMIST-0020-01A-SS-001	OPTIMIST-0020-10A-SS-001	/project/gccri/OPTIMIST/analysis/DNA/2.gatk/OPTIMIST-0020-01A-SS-001.dedupped.realigned.recal.bam	/project/gccri/OPTIMIST/analysis/DNA/2.gatk/OPTIMIST-0020-10A-SS-001.dedupped.realigned.recal.bam
+OPTIMIST-0020-01A-SS-002	OPTIMIST-0020-10A-SS-002	/project/gccri/OPTIMIST/analysis/DNA/2.gatk/OPTIMIST-0020-01A-SS-002.dedupped.realigned.recal.bam	/project/gccri/OPTIMIST/analysis/DNA/2.gatk/OPTIMIST-0020-10A-SS-002.dedupped.realigned.recal.bam
