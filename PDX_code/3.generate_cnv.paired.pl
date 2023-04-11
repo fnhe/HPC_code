@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 my $cpu = 1;
-my $outdir = "/project/gccri/CPRIT_PDX/hef_folder/9.re_sequencing";
+my $outdir = "/project/gccri/CPRIT_PDX/Leuk_2023/DNA";
 
 my $ref = "/home/hef/Data/hg38/resources_broad_hg38_v0/Homo_sapiens_assembly38.fasta";
 my $cnvkit_ini = "/home/hef/Tools/cnvkit_liding/config/config.gencode_grch38.mgi.ini";
@@ -54,17 +54,19 @@ while(<IN>){
         print OUT "/bin/rm $fout/cnvkit/$tumor_id/$tumor_id.T.ba*; ln -s $tumor_bam $fout/cnvkit/$tumor_id/$tumor_id.T.bam; ln -s $tumor_bai $fout/cnvkit/$tumor_id/$tumor_id.T.bam.bai\n";
         print OUT "/bin/rm $fout/cnvkit/$tumor_id/$tumor_id.N.ba*; ln -s $normal_bam $fout/cnvkit/$tumor_id/$tumor_id.N.bam; ln -s $normal_bai $fout/cnvkit/$tumor_id/$tumor_id.N.bam.bai\n";
 	print OUT "bash /home/hef/Tools/cnvkit_liding/src/cnvkit_wxs.tumorNormal.v2.sh -C $cnvkit_ini -p $cnvkit_parameter -S $tumor_id -N $fout/cnvkit/$tumor_id/$tumor_id.N.bam -T $fout/cnvkit/$tumor_id/$tumor_id.T.bam -O $fout/cnvkit|sh\n";
-	#generate sequenza Rscript
-	open SH, ">$fout/seqz/$tumor_id.r";
-	print SH "library(sequenza)\n";
-        print SH "data.file <- \"$fout/seqz/$tumor_id/$tumor_id.seqz.gz\"\n";
-	print SH "seqz <-sequenza.extract(data.file,verbose=FALSE)\nCP <- sequenza.fit(seqz)\n";
-        print SH "sequenza.results(sequenza.extract = seqz, cp.table = CP, sample.id = \"$tumor_id\", out.dir=\"$fout/seqz/$tumor_id\")\n";
-	print OUT "cnvkit.py export seg $fout/cnvkit/$tumor_id/$tumor_id.T.cns --enumerate-chroms -o $fout/pureCN/$tumor_id/$tumor_id.seg\n";	
-	print OUT "/home/hef/Tools/miniconda3/bin/sequenza-utils bam2seqz -n $normal_bam -t $tumor_bam --fasta $ref -gc $gc_wig -o $fout/seqz/$tumor_id/$tumor_id.seqz.gz\n";
-	print OUT "less $fout/seqz/$tumor_id/$tumor_id.seqz.gz|grep -v \"_random\" |bgzip > $fout/seqz/$tumor_id/new.gz; mv $fout/seqz/$tumor_id/new.gz $fout/seqz/$tumor_id/$tumor_id.seqz.gz; tabix -f -s 1 -b 2 -e 2 -S 1 $fout/seqz/$tumor_id/$tumor_id.seqz.gz\n";
-	print OUT "Rscript $fout/seqz/$tumor_id.r > $fout/seqz/$tumor_id.log 2>&1\n";	
+	print OUT "cnvkit.py export seg $fout/cnvkit/$tumor_id/$tumor_id.T.cns --enumerate-chroms -o $fout/pureCN/$tumor_id/$tumor_id.seg\n";
 	
+	#generate sequenza Rscript
+	if ($tumor_id =~ /WES/){
+		open SH, ">$fout/seqz/$tumor_id.r";
+		print SH "library(sequenza)\n";
+        	print SH "data.file <- \"$fout/seqz/$tumor_id/$tumor_id.seqz.gz\"\n";
+		print SH "seqz <-sequenza.extract(data.file,verbose=FALSE)\nCP <- sequenza.fit(seqz)\n";
+        	print SH "sequenza.results(sequenza.extract = seqz, cp.table = CP, sample.id = \"$tumor_id\", out.dir=\"$fout/seqz/$tumor_id\")\n";
+		print OUT "/home/hef/Tools/miniconda3/bin/sequenza-utils bam2seqz -n $normal_bam -t $tumor_bam --fasta $ref -gc $gc_wig -o $fout/seqz/$tumor_id/$tumor_id.seqz.gz\n";
+		print OUT "less $fout/seqz/$tumor_id/$tumor_id.seqz.gz|grep -v \"_random\" |bgzip > $fout/seqz/$tumor_id/new.gz; mv $fout/seqz/$tumor_id/new.gz $fout/seqz/$tumor_id/$tumor_id.seqz.gz; tabix -f -s 1 -b 2 -e 2 -S 1 $fout/seqz/$tumor_id/$tumor_id.seqz.gz\n";
+		print OUT "Rscript $fout/seqz/$tumor_id.r > $fout/seqz/$tumor_id.log 2>&1\n";	
+	}
 	#pureCN
 	my $mapping_bias= $mapping_bias_wes;
 	if ($tumor_id =~ /WES/){

@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 my $cpu = 4;
-my $outdir = "/project/gccri/CPRIT_PDX/hef_folder/9.re_sequencing";
+my $outdir = "/project/gccri/CPRIT_PDX/Leuk_2023/DNA";
 my $ref_h = "/home/hef/Data/hg38/hg38.fa";
 my $ref_m = "/home/hef/Data/mm10/mm10.fa";
 
@@ -16,7 +16,7 @@ my $pwd = `pwd`;
 chomp $pwd;
 `mkdir -p $pwd/script_sh`;
 `mkdir -p $outdir/0.disambiguate $outdir/1.trim $outdir/1.trim/Final_fq $outdir/2.gatk`;
-open OT, ">trimmed_fq.ls" or die $!;
+open OT, ">trimmed_fq.dna.ls" or die $!;
 open IN,"<$ARGV[0]" or die $!;
 while(<IN>){
         chomp;
@@ -32,7 +32,7 @@ while(<IN>){
 		print SH "samtools sort -m 2G -@ $cpu -o $fout/$id.disam.sortbyname.bam -n $fout/$id.disambiguatedSpeciesA.bam\n";
         	print SH "samtools fastq $fout/$id.disam.sortbyname.bam -1 $fout/$id.disam_1.fastq.gz -2 $fout/$id.disam_2.fastq.gz -0 /dev/null -s /dev/null -n -F 0x900\n";
         	print SH "/bin/rm -rf $fout/$id.*log $fout/$id.*out $fout/$id.*bam\n";
-		print SH "trim_galore --phred33 --fastqc --length 50 -q 20 --basename $id -o $outdir/1.trim/trimmed_fq --paired $fout/$id.disam_1.fastq.gz $fout/$id.disam_2.fastq.gz\n";
+		print SH "trim_galore --phred33 --fastqc --length 50 -q 20 --basename $id -o $outdir/1.trim/trimmed_fq --paired $fout/$id.disam_1.fastq.gz $fout/$id.disam_2.fastq.gz;/bin/rm -rf $fout/$id.disam_1.fastq.gz $fout/$id.disam_2.fastq.gz\n";
 		
 	}
 	else{
@@ -54,7 +54,7 @@ while(<IN>){
 	print SH "java -Xmx16g -Djava.io.tmpdir=$pwd/tmp -jar /home/hef/Tools/gatk-4.2.3.0/GenomeAnalysisTK.jar -T IndelRealigner -R $ref -I $fout/$id.added.dedupped.bam -known $Mills_indel -known $known_indel -targetIntervals $fout/$id.intervals.list  -o $fout/$id.dedupped.realigned.bam\n";
 	print SH "java -Xmx16g -Djava.io.tmpdir=$pwd/tmp -jar /home/hef/Tools/gatk-4.2.3.0/GenomeAnalysisTK.jar -T BaseRecalibrator -nct $cpu -R $ref -I $fout/$id.dedupped.realigned.bam --knownSites $known_dbsnp_1000 --knownSites $known_dbsnp --knownSites $Mills_indel --knownSites $known_indel -o $fout/$id.data.table\n";
 	print SH "java -Xmx16g -Djava.io.tmpdir=$pwd/tmp -jar /home/hef/Tools/gatk-4.2.3.0/GenomeAnalysisTK.jar -T PrintReads -nct $cpu -R $ref -I $fout/$id.dedupped.realigned.bam -BQSR $fout/$id.data.table -o $fout/$id.dedupped.realigned.recal.bam\n";
-	print SH "/bin/rm -rf $fout/$id.added.dedupped.ba* $fout/$id.dedupped.realigned.ba* $fout/$id.*sorted*ba*\n";
+	print SH "/bin/rm -rf $fout/$id.bam $fout/$id.added.dedupped.ba* $fout/$id.dedupped.realigned.ba* $fout/$id.*sorted*ba*\n";
 
 
 }

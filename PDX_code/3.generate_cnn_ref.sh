@@ -1,0 +1,7 @@
+less wgs.normal.ls|awk '{print "/home/hef/Tools/miniconda3/bin/cnvkit.py coverage "$2" /home/hef/Tools/cnvkit_liding/hg38_bed/hg38_target -o /project/gccri/CPRIT_PDX/hef_folder/5.CNV/cnvkit/tumor_only/ref/"$1".targetcoverage.cnn;/home/hef/Tools/miniconda3/bin/cnvkit.py coverage "$2" /home/hef/Tools/cnvkit_liding/hg38_bed/hg38_antitarget -o /project/gccri/CPRIT_PDX/hef_folder/5.CNV/cnvkit/tumor_only/ref/"$1".antitargetcoverage.cnn"}' > ref.sh   # generate cnn
+less wes.normal.ls|awk '{print "/home/hef/Tools/miniconda3/bin/cnvkit.py coverage "$2" /home/hef/Tools/cnvkit_liding/hg38_bed/hg38_target -o /project/gccri/CPRIT_PDX/hef_folder/5.CNV/cnvkit/tumor_only/ref/"$1".targetcoverage.cnn;/home/hef/Tools/miniconda3/bin/cnvkit.py coverage "$2" /home/hef/Tools/cnvkit_liding/hg38_bed/hg38_antitarget -o /project/gccri/CPRIT_PDX/hef_folder/5.CNV/cnvkit/tumor_only/ref/"$1".antitargetcoverage.cnn"}' >> ref.sh
+
+/home/hef/Tools/miniconda3/bin/cnvkit.py reference /project/gccri/CPRIT_PDX/hef_folder/5.CNV/cnvkit/tumor_only/ref/*_WES*cnn -f /home/hef/Data/hg38/resources_broad_hg38_v0/Homo_sapiens_assembly38.fasta -o /project/gccri/CPRIT_PDX/hef_folder/5.CNV/cnvkit/tumor_only/ref/Reference.WES.cnn
+/home/hef/Tools/miniconda3/bin/cnvkit.py reference /project/gccri/CPRIT_PDX/hef_folder/5.CNV/cnvkit/tumor_only/ref/*_WGS*coverage.cnn -f /home/hef/Data/hg38/resources_broad_hg38_v0/Homo_sapiens_assembly38.fasta -o /project/gccri/CPRIT_PDX/hef_folder/5.CNV/cnvkit/tumor_only/ref/Reference.WGS.cnn
+
+

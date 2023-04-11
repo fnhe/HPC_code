@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 my $cpu = 1;
-my $outdir = "/project/gccri/CPRIT_PDX/hef_folder/9.re_sequencing";
+my $outdir = "/project/gccri/CPRIT_PDX/Leuk_2023/DNA";
 
 my $insert_size = 300;
 my $ref = "/home/hef/Data/hg38/resources_broad_hg38_v0/Homo_sapiens_assembly38.fasta";
